@@ -8,6 +8,8 @@ class App extends React.Component {
     this.state = {
       data: []
     };
+
+    this.getUserInput = this.getUserInput.bind(this);
   }
 
   componentDidMount() {
@@ -17,16 +19,30 @@ class App extends React.Component {
       .then(res => res.json())
       .then(results => {
         this.setState({
-          data: results
+          data: results,
+          input: ''
         })
       });
+  }
+
+  getUserInput(event) {
+    const value = event.currentTarget.value;
+
+    this.setState({
+      input: value
+    })
   }
 
   render() {
     return (
       <div className="App">
+        <h1 className="app__title">Listado de pokemons</h1>
+        <p className="text">Filtra a tus pokemons preferidos</p>
+        <input type="text" className="field" onChange={this.getUserInput}/>
         <ul className="pokemon-list">
-          {this.state.data.map((item, index) => {
+          {this.state.data
+            .filter(item => item.name.toUpperCase().includes(this.state.input.toUpperCase()))
+            .map((item, index) => {
             return (
               <li className="pokemons-card" key={index}>
                 <div className="pokemon-name">{item.name}</div>
